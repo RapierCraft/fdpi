@@ -10,6 +10,7 @@ export async function waitForTask(readTask, options = {}) {
         await pause();
         break;
       case "done":
+      case "succeeded":
         return task.value;
       case "failed":
         throw new Error(`Task failed: ${task.error ?? "unknown failure"}`);
