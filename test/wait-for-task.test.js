@@ -22,7 +22,23 @@ test("returns the value for legacy done status", async () => {
   assert.equal(source.reads(), 1);
 });
 
-test("continues through waiting and working states", async () => {
+test("returns the value for canonical succeeded status", async () => {
+  const source = sequence({ status: "succeeded", value: "ready" });
+  assert.equal(await waitForTask(source.readTask, { pause: async () => {} }), "ready");
+  assert.equal(source.reads(), 1);
+});
+
+test("continues through waiting and working states to succeeded", async () => {
+  const source = sequence(
+    { status: "waiting" },
+    { status: "working" },
+    { status: "succeeded", value: "complete" },
+  );
+  assert.equal(await waitForTask(source.readTask, { pause: async () => {} }), "complete");
+  assert.equal(source.reads(), 3);
+});
+
+test("continues through waiting and working states to legacy done", async () => {
   const source = sequence(
     { status: "waiting" },
     { status: "working" },

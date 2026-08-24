@@ -9,6 +9,7 @@ export async function waitForTask(readTask, options = {}) {
       case "working":
         await pause();
         break;
+      case "succeeded":
       case "done":
         return task.value;
       case "failed":
